@@ -1,0 +1,38 @@
+cmsrel CMSSW_4_1_6
+cd CMSSW_4_1_6/src
+cmsenv
+
+# susypat
+addpkg ElectroWeakAnalysis/WENu           V00-04-00
+addpkg MuonAnalysis/MuonAssociators       V01-13-00
+addpkg PhysicsTools/Configuration         V00-10-10
+
+# For ele id conversion rejection
+addpkg RecoEgamma/EgammaTools V08-11-08 
+
+# For deterministic FastJet-rho
+addpkg RecoJets/Configuration       V02-04-16
+addpkg RecoJets/JetAlgorithms       V04-01-00      
+addpkg RecoJets/JetProducers        V05-05-03
+
+# tau update
+addpkg CommonTools/ParticleFlow     V00-01-06
+addpkg PhysicsTools/PatAlgos        V08-06-16
+addpkg DataFormats/TauReco          V01-00-07-01
+addpkg RecoTauTag/Configuration     V01-00-27
+addpkg RecoTauTag/RecoTau           V01-00-33
+addpkg RecoTauTag/TauTagTools       V01-00-12
+cvs co -r V08-06-01-09 PhysicsTools/PatAlgos/python/triggerLayer1/triggerMatcher_cfi.py
+
+# 41X only
+cvs up -r 1.3 RecoJets/JetProducers/src/CastorJetIDHelper.cc
+
+# avoid double plugins
+addpkg PhysicsTools/PFCandProducer        V04-07-02
+rm PhysicsTools/PFCandProducer/interface/*
+rm PhysicsTools/PFCandProducer/plugins/*
+touch PhysicsTools/PFCandProducer/plugins/PFPileUp.cc
+
+cvs co -rV15-02-01 -dSUSYBSMAnalysis/SusyCAF UserCode/SusyCAF
+
+

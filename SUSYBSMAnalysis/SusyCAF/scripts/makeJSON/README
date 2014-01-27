@@ -1,0 +1,35 @@
+The command
+
+./findRuns.py run_number
+
+will create a 2 json files for all runs > run_number.
+
+        jsonls.txt    :   the standard good run/LS list
+NONEPOG_jsonls.txt    :   the same but ignoring the POGs (Egamma,Muon,JetMET,Track)
+
+In additions config snippets are created:
+           cfg.txt
+   NONEPOG_cfg.txt
+
+Up to now there is only 1 run (133082) where all DPG are good and one of the POG is not good. Therefore in most cases 
+(i.e. for run_number>133082) there will be no NONEPOG lists.
+
+The runreg.cfg file is used to steer the program. DBS access must be included to get the same results as in the 
+official jsonls.txt. 
+
+findRun.py is a modification of runregparse.py described in 
+https://twiki.cern.ch/twiki/bin/viewauth/CMS/Collisions2010Recipes#Helper_script
+
+In addition there is a little utillity to compare json files:
+./showJsonDiff jsonls_1.txt jsonls_2.txt
+
+Example: 
+1.) a list of all good runs in 2010
+./findRuns.py 
+
+2.) a list of new runs
+The last (7th May 2010) official json file
+https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Cert_132440-133928_StreamExpress_Commissioning10-Express_DQM_JSON.txt
+contains all runs up to 134987. If you want to get a list of new runs/LS since that run
+./findRuns.py 134987
+

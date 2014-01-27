@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+
+help = r"""Command-line tool to show diff between json files
+
+Usage:
+	showJsonDiff file1 file2
+
+Needs tkdiff.
+"""                            
+
+import sys
+from posix import system
+import json
+
+if len(sys.argv) != 3:
+	print help
+	exit(0) 
+
+try:
+	f1 = open(sys.argv[1])
+	j1 = json.load(f1)
+	out1 = "first_json"
+	ofile1 = open(out1,'w')
+	json.dump(j1, ofile1, sort_keys=True, indent=4)
+	ofile1.close()
+except:
+	print "cannot handle ", sys.argv[1]
+	raise SystemExit()
+	
+try:
+	f2 = open(sys.argv[2])
+	j2 = json.load(f2)
+	out2 = "second_json"
+	ofile2 = open(out2,'w')
+	json.dump(j2, ofile2, sort_keys=True, indent=4)
+	ofile2.close()
+except:
+	print "cannot handle ", sys.argv[2]
+	raise SystemExit()
+
+system("tkdiff "+out1+" "+out2)
+system("rm "+out1+" "+out2)

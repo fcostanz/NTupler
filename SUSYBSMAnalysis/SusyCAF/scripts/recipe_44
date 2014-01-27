@@ -1,0 +1,19 @@
+#!/bin/bash
+
+CMSSW=CMSSW_4_4_3
+
+cmsrel $CMSSW
+cd $CMSSW/src
+cmsenv
+
+# susypat
+addpkg PhysicsTools/Configuration    V00-11-01
+addpkg PhysicsTools/PatAlgos         V08-07-38-02
+addpkg MuonAnalysis/MuonAssociators  V01-13-00
+
+
+#MET filters
+addpkg DataFormats/METReco lhx_12JAN2012_v1
+cvs co -r lhx_08FEB2012_v2 RecoMET/METFilters
+
+cvs co -rV16-00-01 -dSUSYBSMAnalysis/SusyCAF UserCode/SusyCAF

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+CMSSW=CMSSW_4_2_8_patch7
+
+cmsrel $CMSSW
+cd $CMSSW/src
+cmsenv
+
+# susypat
+addpkg PhysicsTools/Configuration    V00-10-17
+addpkg MuonAnalysis/MuonAssociators  V01-13-00
+addpkg PhysicsTools/PatAlgos         V08-06-46
+addpkg DataFormats/PatCandidates     V06-04-19-02
+addpkg PhysicsTools/SelectorUtils    V00-03-24
+addpkg PhysicsTools/UtilAlgos        V08-02-14
+addpkg CommonTools/ParticleFlow      B4_2_X_V00-03-00
+
+# For deterministic FastJet-rho
+addpkg RecoJets/Configuration       V02-04-17
+
+# tau update
+addpkg DataFormats/TauReco        V01-00-07-01
+addpkg RecoTauTag/Configuration   V01-02-03
+addpkg RecoTauTag/RecoTau         V01-02-07
+addpkg RecoTauTag/TauTagTools     V01-02-00
+
+#Markus filter tags
+cvs co -rColin_TaggingMode_June30 JetMETAnalysis/ecalDeadCellTools
+cvs co -rTrackingfailTagMode_18Oct11 -dSandBox/Skims UserCode/seema/SandBox/Skims
+rm SandBox/Skims/python/RA2Cleaning_cff.py # fails to compile
+rm SandBox/Skims/python/RA2Objects_cff.py # fails to compile
+
+cvs co -rV15-04-00 -dSUSYBSMAnalysis/SusyCAF UserCode/SusyCAF

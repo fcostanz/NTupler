@@ -1,0 +1,39 @@
+#!/bin/bash
+
+export SCRAM_ARCH=slc5_amd64_gcc462
+CMSSW=CMSSW_5_2_5
+
+cmsrel $CMSSW
+cd $CMSSW/src
+cmsenv
+
+# susypat
+# (https://twiki.cern.ch/twiki/bin/viewauth/CMS/SusyPatLayer1DefV12)
+# (https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuidePATReleaseNotes52X)
+# MET Type I (https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookMetAnalysis)
+
+addpkg DataFormats/PatCandidates V06-05-01
+addpkg PhysicsTools/PatAlgos V08-09-11
+addpkg CommonTools/ParticleFlow V00-03-14
+addpkg JetMETCorrections/Type1MET V04-06-07
+addpkg PhysicsTools/PatUtils V03-09-22
+addpkg CommonTools/RecoUtils V00-00-09
+
+addpkg PhysicsTools/Configuration  V00-12-02
+
+#MET filters (https://twiki.cern.ch/twiki/bin/view/CMS/MissingETOptionalFilters)
+cvs co -r V00-00-07 RecoMET/METFilters
+
+# functions to compute electron IDs
+cvs co -r CutBasedId_V00-00-02 -d EGamma/EGammaAnalysisTools UserCode/EGamma/EGammaAnalysisTools
+
+cvs co -dSUSYBSMAnalysis/SusyCAF -r V17-0 UserCode/SusyCAF
+
+unalias cp
+cp -p SUSYBSMAnalysis/SusyCAF/python/mods/SUSY_pattuple_cff.py PhysicsTools/Configuration/python/SUSY_pattuple_cff.py
+cp -p SUSYBSMAnalysis/SusyCAF/python/mods/jetTools.py PhysicsTools/PatAlgos/python/tools/
+ 
+## TODO ##
+# taus
+# consider conversion module
+# check severity level adjustments

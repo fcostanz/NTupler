@@ -1,0 +1,79 @@
+This directory contains scripts which implement job planning and
+submission coordinated via sqlite database.
+
+[webpage_SCBooks.py] The function write_webpage(db,file) is called
+every time the db is saved.  You can find it here:
+/afs/cern.ch/cms/CAF/CMSPHYS/PHYS_SUSY/SusyCAF/bookkeeping/sqliteView.html
+I wanted to have mod_python or mod_php with sqlite from my afs public
+web.  Although mod_php functions, it is <PHP5, and sqlite is turned
+off.  Soft links don't work.  CGI might, but I'm unfamiliar. Better
+solutions are welcome.
+
+[configuration_SCBooks.py] 
+The file locations and database definitions can be found at the top.
+Then common functions like database connection, sanity checks, and
+locking are defined.
+
+There are 3 executable scripts:
+1. planJobs.py
+2. claimJob.py
+3. setJobStatus.py
+
+NB: [environment] 
+python with sqlite3 library must be in your path, which
+you can usually achieve with 'cmsenv'.
+
+NB: [Locking etiquette] 
+1. If someone has locked the database, do not break their lock without asking them.
+2. If you crash a script or quit via C-c or something, you may leave the database locked.  
+You need to break your own lock by running a script and quitting properly.
+
+[claimJob.py] 
+1. the database is locked
+2. the user is offered a choices
+  a) GRID/CAF(***)
+  b) list of planned, unclaimed jobs
+3. if the user does not claim a valid job, exit
+4. The tag is checked out into a local /tmp directory and compiled.  It may be hundreds of MB.
+5. Crab is set up in a local /tmp directory, and the remote output directories are prepared
+6. Multicrab is set up if appropriate, splitting the processing by run
+7. Jobs are created and submitted (you must enter your grid password)
+8. The job is updated in the db as claimed, etc.
+9. The db is saved and unlocked.
+...
+user is responsible for running (multi)crab on the directories to
+kill/resubmit as appropriate, and for updating job db status via
+setJobStatus after all jobs have returned success (0) or the user
+wishes to relinquish the job
+
+(***) CAF was working in principle, but servers were in drain mode and was never tested.  GRID worked with no problem.
+
+[setJobStatus.py]
+1. The db is locked.
+2. The user is offered a choice of THEIR OWN jobs in order of state,age
+3. The user is offered a choice of state to update selected job
+4. the db is saved and unlocked.
+
+
+[planJobs.py]
+1. The db is locked.
+2. text menu interface: quit,save, tag, dset, job
+* tag,dset,job have sub-menus.
+  * You can list,create,delete from these tables.
+  * job.tagid and job.dsetid need to be valid rowid entries in tag and dset
+  * deletion from tag or dset recursively deletes those jobs.
+  * job.jsonls can be null (all), a path to a file ending in .txt, or the content of a jsonls file
+  * dset.filter is ignored in the scripts, so it is effectively a user
+comment field.  The planner promises to only plan jobs in accordance
+with this filter comment, which should represent the flags used in the
+script to filter out lumi-sections.  I propose null, GOODPOG, BADPOG
+to begin with.  I can imagine that some option here also gets passed
+to exampleTree_cfg.py in the future, so this field may turn out to be
+multipurpose.
+
+[CLI sqlite3]
+You can run your own more sophisticated queries from your own scripts
+(which you might add to cvs here) or on the command line interface of
+sqlite3.  For example, try:
+sqlite3 /afs/cern.ch/cms/CAF/CMSPHYS/PHYS_SUSY/SusyCAF/bookkeeping/sqlite.db 'select user,dataset from job join dset on dset.rowid=job.dsetid where state="Processing"'
+
