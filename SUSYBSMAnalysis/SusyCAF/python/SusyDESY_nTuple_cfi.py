@@ -51,7 +51,12 @@ class SusyCAF(object) :
         from SUSYBSMAnalysis.SusyCAF.SusyCAF_Scan_cfi import susycafscanFunc as susycafscanFunc
         self.process.susycafscan = susycafscanFunc(self.options.scan) if self.options.scan else self.empty
         if self.options.scan.find("T2tt") > -1 :
-            self.process.susycafscan.ScanFormat = r"# model T2tt_(\\d*\.\\d*)_(\\d*\.\\d*)\\s\\s(\\d*\.\\d*)\\s*"
+            self.process.susycafscan.ScanFormat = r"# model T2ttFS52_(\\d*\.\\d*)_(\\d*\.\\d*)\\s\\s(\\d*\.\\d*)\\s*"            
+            self.process.susycafscan.ScanFormat = r"# model T2bwFS53_(\\d*\.\\d*)_(\\d*\.\\d*)_(\\d*\.\\d*)\\s\\s(\\d*\.\\d*)\\s*"
+            self.process.susycafscan.ScanFormat = r"# model T2tbFS53_(\\d*\.\\d*)_(\\d*\.\\d*)\\s\\s(\\d*\.\\d*)\\s*"
+            
+            self.process.susycafscan.ScanParameters = ['mStop', 'mLSP', 'XSEC']
+            self.process.susycafscan.ScanParameters = ['mStop', 'mLSP', 'mCHI', 'XSEC']
             self.process.susycafscan.ScanParameters = ['mStop', 'mLSP', 'XSEC']
         from SUSYBSMAnalysis.DesySusy.SusyDESY_Module_cfi import susydesyscanTemp
         self.process.susydesyscan = susydesyscanTemp.clone( ScanFormat = self.process.susycafscan.ScanFormat,
@@ -153,7 +158,7 @@ class SusyCAF(object) :
                                                                                                                                forcedValue = cms.untracked.bool(True) )
         self.process.logErrorTooManySeedsMainIterationsFilterFlag = logErrorTooManySeedsMainIterations.clone ( taggedMode = cms.untracked.bool(True),
                                                                                                                forcedValue = cms.untracked.bool(True) )
-
+        
         self.process.trkPOGFilters = cms.Sequence( self.process.logErrorTooManyClustersFilterFlag +
                                                    self.process.logErrorTooManyTripletsPairsFilterFlag +
                                                    self.process.logErrorTooManySeedsFilterFlag +
@@ -163,6 +168,8 @@ class SusyCAF(object) :
                                                    self.process.logErrorTooManyTripletsPairsMainIterationsFilterFlag +
                                                    self.process.logErrorTooManySeedsMainIterationsFilterFlag
                                                    )
+        if not self.options.beamHaloVars:
+            self.process.trkPOGFilters = cms.Sequence()
 
         #METMVA:
         self.process.load('JetMETCorrections.Configuration.JetCorrectionProducers_cff')
