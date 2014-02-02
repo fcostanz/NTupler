@@ -9,6 +9,7 @@ if [ $5 ]
 fi
 DESYSTORAGE="dcache-se-cms.desy.de"
 XRDSERVER="root://cms-xrd-global.cern.ch/"
+XRDSERVER=""
 
 echo $CFGNAME
 
@@ -38,11 +39,11 @@ value=0
 rm -f filelist.txt
 dbs search --query="find file where dataset=$DS" | grep .root > filelist.txt
 
-flag=`dbs search --query="find site where dataset=$DS" | grep $DESYSTORAGE`
-if [ $flag ]
-    then
-    XRDSERVER=""
-fi
+#flag=`dbs search --query="find site where dataset=$DS" | grep $DESYSTORAGE`
+#if [ $flag ]
+#    then
+#    XRDSERVER=""
+#fi
 
 while read line
   do
