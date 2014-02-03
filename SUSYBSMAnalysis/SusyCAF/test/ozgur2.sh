@@ -1,27 +1,5 @@
 #!/bin/zsh
 
-export SCRAM_ARCH=slc5_amd64_gcc462
-ini cmssw_cvmfs
-
-cmsrel CMSSW_5_3_3_patch2
-cd CMSSW_5_3_3_patch2/src/
-cmsenv
-
-git clone  https://github.com/fcostanz/NTupler.git
-mv NTupler/* .
-scram setup lhapdffull
-touch $CMSSW_BASE/src/ElectroWeakAnalysis/Utilities/BuildFile.xml
-
-scram b -j8
-rehash
-
-scram b -j8
-rehash
-cmsenv
-
-cd SUSYBSMAnalysis/SusyCAF/test
-
-
 cmsRun susydesy_cfg.py isData=1 output=SusyCAF_Tree_Data.root triggers=1 GlobalTag=FT_53_V6_AN3::All maxEvents=10 taus=0 jetCollections=ak5pf  files=/store/data/Run2012A/MuHad/AOD/13Jul2012-v1/00000/0009AB65-FFD0-E111-8622-003048FFD79C.root doTauReco=1
 
 nafJobSplitterCfgMaker.sh Data /MuHad/Run2012A-13Jul2012-v1/AOD FT_53_V6C_AN3::All MuHad_Run2012A13Jul_cfg.py Cert_190456-196531_8TeV_13Jul2012ReReco_Collisions12_JSON_v2.txt
