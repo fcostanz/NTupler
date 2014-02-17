@@ -31,7 +31,7 @@ scanFormats = {'T1_xCHI' : r"# model T1_(\\d*\.\\d*)_(\\d*\.\\d*)_(\\d*\.\\d*)\\
                'T3lh' : r"# model T3lh_(\\d*\.\\d*)_(\\d*)_(\\d*)\\s*(\\d*.\\d*E-\\d*).*",
                'T2ttFS52' : r"# model T2tt_(\\d*\.\\d*)_(\\d*\.\\d*)\\s\\s(\\d*\.\\d*)\\s*",
                'T2bwFS53' : r"# model T2bw_(\\d*\.\\d*)_(\\d*\.\\d*)_(\\d*\.\\d*)\\s\\s(\\d*\.\\d*)\\s*",
-               'T2tbFS53' : r"# model T2tb_(\\d*\.\\d*)_(\\d*\.\\d*)\\s\\s(\\d*\.\\d*)\\s*"
+               'T2tbFS53' : r"# model T2tb_(\\d*)_(\\d*)\\s*(\\d*\.\\d*)\\s*"
                }
 
 scanParameters = {"T1_xCHI" : ['xCHI', 'mGL', 'mLSP'],

@@ -68,6 +68,10 @@ class SusyCAF(object) :
                                                      self.process.susydesytcMet +
                                                      self.process.susydesytcMetWithPFclusters
                                                      )
+
+        from SUSYBSMAnalysis.DesySusy.SusyDESY_Module_cfi import susydesyscanTemp
+        self.process.susydesyscan = susydesyscanTemp.clone( ScanFormat = self.process.susycafscan.ScanFormat,
+                                                            ScanParameters = self.process.susycafscan.ScanParameters) if self.options.scan else self.empty
         
         return ( self.evalSequence('susycafhcalnoise%s', ['filter','filternoiso','rbx','summary']) +
                  self.evalSequence('susycaf%s', (['event','track','pfsump4','beamspot','logerror','vertex','calotowers','rho','rho25'] +
@@ -78,7 +82,7 @@ class SusyCAF(object) :
                  self.evalSequence('susycafpfrechitcluster%s', ['ecal','hcal','hfem','hfhad','ps']) +
                  self.evalSequence('susycafpfrechit%s',        ['ecal','hcal','hfem','hfhad','ps']) +
 
-                 self.process.susydesymetPF + self.process.susydesyCaloMET + #self.process.susydesyscan +
+                 self.process.susydesymetPF + self.process.susydesyCaloMET + self.process.susydesyscan +
                  self.evalSequence(*[ ('susycaf%s',['gen','genMetCalo','genMetCaloAndNonPrompt','genMetTrue','scan','pileupsummary']), # Gen
                                       ('susycaf%s',['dqmflags','dcsbits'][(not self.options.dqm):]) # Data
                                       ][self.options.isData])
